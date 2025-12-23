@@ -4,10 +4,12 @@ on:
     push:
         branches:
             - main
+            
         paths:
             - "backend/**" # only trigger on changes in backend directory
             - "!backend/**/*.md" # ignore markdown file changes
         
+    workflow_dispatch:
 
 
 
