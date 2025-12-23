@@ -17,145 +17,81 @@ import { AuthProvider } from "@/components/providers/auth-provider";
 
 
 
-// export const metadata: Metadata = {
-//   metadataBase: new URL("https://ecotrack.thissidemayur.me"), // Set your base URL for images and other metadata
-//   title: "EcoTrack - Carbon Footprint Calculator",
-//   description: "Track and reduce your carbon footprint with EcoTrack",
-//   authors: [
-//     { name: "Mayur Pal", url: "thissidemayur.me" },
-//     { name: "@thissidemayur", url: "thissidemayur.me" },
-//   ],
-//   creator: "Mayur Pal",
-//   keywords: [
-//     "Carbon Footprint",
-//     "Sustainability",
-//     "EcoTrack",
-//     "Environmental Impact",
-//     "Green Living",
-//     "Climate Change",
-//     "Carbon Emissions",
-//     "Sustainable Lifestyle",
-//     "Eco-Friendly Practices",
-//     "Carbon Calculator",
-//     "Reduce Carbon Footprint",
-//     "Environmental Awareness",
-//     "Climate Action",
-//     "Sustainability Tools",
-//     "Green Technology",
-//     "Carbon Reduction Strategies",
-//     "EcoTrack Dashboard",
-//     "Next.js Sustainability App",
-//     "Next.js",
-//     "Typescript",
-//     "Express",
-//     "MongoDB",
-//     "Redis",
-//     "JavaScript",
-//   ],
 
-//   icons: {
-//     icon: [
-//       { url: "/icon.png" },
-//       new URL("/icon.png", "https://ecotrack.thissidemayur.me").toString(),
-//       { url: "/icon-dark.png", media: "(prefers-color-scheme: dark)" },
-//     ],
-//     shortcut: ["/shortcut-icon.png"],
-//     apple: [
-//       { url: "/apple-icon.png" },
-//     ],
-//     other: [
-//       {
-//         rel: "apple-touch-icon-precomposed",
-//         url: "/apple-touch-icon-precomposed.png",
-//       },
-//     ],
-//   },
+export const metadata: Metadata = {
+  metadataBase: new URL("https://ecotrack.thissidemayur.me"),
+  title: {
+    default: "EcoTrack | Your Green Mission Starts Here",
+    template: "%s | EcoTrack",
+  },
+  description:
+    "Join a community of neighbors tracking their footprint to build a cleaner future. Simple carbon tracking for everyone.",
 
-//   // openGraph
-//   openGraph: {
-//     title: "EcoTrack - Carbon Footprint Calculator",
-//     description: "Track and reduce your carbon footprint with EcoTrack",
-//     url: "https://ecotrack.thissidemayur.me",
-//     siteName: "EcoTrack",
-//     images: [
-//       {
-//         url: "/og-image.png",
-//         width: 800,
-//         height: 600,
-//         alt: "EcoTrack Open Graph Image",
-//       },
-//       {
-//         url: "/og-image-2.png",
-//         width: 1800,
-//         height: 1600,
-//         alt: "EcoTrack Open Graph Image Large",
-//       },
-//     ],
-//     locale: "en_US",
-//     type: "website",
-//   },
-//   // robots
-//   robots: {
-//     index: true,
-//     follow: true,
-//     nocache: false,
-//     googleBot: {
-//       index: true,
-//       follow: true,
-//       noimageindex: false,
-//       "max-video-preview": -1,
-//       "max-image-preview": "large",
-//       "max-snippet": -1,
-//     },
-//   },
-//   // twitter
-//   twitter: {
-//     card: "summary_large_image",
-//     title: "EcoTrack - Carbon Footprint Calculator",
-//     description: "Track and reduce your carbon footprint with EcoTrack",
-//     images: ["/og-image.png"],
-//     creator: "@thissidemayur",
-//   },
+  // Update your keywords to be more user-focused
+  keywords: [
+    "Mayur Pal",
+    "thissidemayur",
+    "Mayur Pal Projects",
+    "Mayur Pal Developer",
+    "EcoTrack by Mayur Pal",
+    "Full Stack Developer Punjab",
+    "Next.js Portfolio",
+    "Sustainable Living App",
+    "Carbon Footprint Tracker India",
+    "Climate Action App",
+    "Green Living India",
+    "MERN Stack Sustainability",
+    "Devops engineer India- Mayur Pal",
 
-//   // verification- enable monitoring of site ownership
-//   verification: {
-//     google: 'google',
-//     yandex: 'yandex',
-//     yahoo: 'yahoo',
-//     other: {
-//       me: ['my-email', 'my-link'],
-//     },
-//   },
+    "Carbon Footprint India",
+    "Community Sustainability",
+    "EcoTrack Punjab",
+    "Green Neighborhood",
+    "Carbon Calculator for Home",
+    "Sustainable Living Tips",
+  ],
 
+  authors: [
+    { name: "Mayur Pal", url: "https://thissidemayur.me" },
+    { name: "thissidemayur", url: "https://thissidemayur.me" },
+  ],
+  creator: "Mayur Pal",
+  publisher: "Mayur Pal", // Adding publisher helps Google verify authority
 
-//   // appleWebApp
-//   itunes: {
-//     appId: "",
-//     appArgument: "https://ecotrack.thissidemayur.me",
-//   },
-//   appleWebApp: {
-//     title: "EcoTrack",
-//     statusBarStyle: "default",
-//     startupImage: [
-//       "/appleWebAppImage.png",
-//       {
-//         url: "/assets/startup/apple-touch-startup-image-1536x2008.png",
-//         media: "(device-width: 768px) and (device-height: 1024px)",
-//       },
-//     ],
-//   },
-//   category: "technology",
+  openGraph: {
+    title: "EcoTrack | Join the Mission for a Greener Tomorrow",
+    description:
+      "I just joined the EcoTrack mission. Track your impact and lead the way with us!",
+    url: "https://ecotrack.thissidemayur.me",
+    siteName: "EcoTrack",
+    images: [
+      {
+        url: "/og-image.png", // Ensure this is 1200x630
+        width: 1200,
+        height: 630,
+        alt: "EcoTrack - Developed by Mayur Pal",
+      },
+    ],
+    locale: "en_IN", // Changed to India locale
+    type: "website",
+  },
 
-//   // facebook
-//   facebook: {
-//     // appId: "",
-//     admins: ["12345678", "87654321"],
-//   },
-//   // pinterest
-//   // pinterest: {
-//   //   richPins: true,
-//   // },
-// };
+  twitter: {
+    card: "summary_large_image",
+    title: "EcoTrack | Join the Green Mission",
+    description:
+      "Track your impact and see how our community is saving the planet together.",
+    images: ["/og-image.png"],
+    creator: "@thissidemayur",
+    site: "@thissidemayur",
+  },
+
+  // verification - Add your real codes here
+  // verification: {
+  //   google: "YOUR_REAL_GOOGLE_CODE",
+  //   // yandex and yahoo are usually not needed for a local Indian/Global project
+  // },
+};
 
 export default function RootLayout({
   children,
