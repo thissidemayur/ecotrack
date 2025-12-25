@@ -9,6 +9,7 @@ import {sanitizedBodyMiddleware } from "./middlewares/InputSanitization.js"
 import { securityHeaders } from "./middlewares/security.middleware.js"
 // imports for middlewares and routes
 import { healthCheckRouter } from "./routes/healthCheck.js"
+import router from "./routes/index.js"
 const app = express()
 
 app.use(healthCheckRouter);
