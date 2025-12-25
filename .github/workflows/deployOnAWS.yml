@@ -59,7 +59,7 @@ jobs:
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy to Amazon ECS service
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1 # Use v1 (the official AWS version)
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2 # Use v1 (the official AWS version)
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: ecotrack-ecs-service # Ensure this matches AWS exactly
