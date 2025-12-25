@@ -8,7 +8,7 @@ connectDB()
 connectRedis()
 
 // 2. Start express server
-const server = app.listen(config.PORT,()=>{
+const server = app.listen(config.PORT,config.HOST,()=>{
     console.log(`Server is running in ${config.NODE_ENV} mode on port ${config.PORT}`)
     console.log(`Client URL: ${config.CLIENT_URL}`)
 })

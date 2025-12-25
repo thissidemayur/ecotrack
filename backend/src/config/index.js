@@ -11,6 +11,7 @@ const requiredConfig = [
   "CLIENT_URL", //reuired for CORS and secure cookie setup
   "NODE_ENV",
   "REDIS_URL",
+  "HOST"
 ];
 
 requiredConfig.forEach(key =>{
@@ -25,7 +26,7 @@ export const config = {
     NODE_ENV: process.env.NODE_ENV,
     PORT:process.env.PORT,
     CLIENT_URL:process.env.CLIENT_URL,
-
+    HOST:process.env.HOST,
     // DB
     MONGO_URI:process.env.MONGO_URI,
 
