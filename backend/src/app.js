@@ -9,9 +9,10 @@ import router from "./routes/index.js"
 import {sanitizedBodyMiddleware } from "./middlewares/InputSanitization.js"
 import { securityHeaders } from "./middlewares/security.middleware.js"
 // imports for middlewares and routes
-
-
+import { healthCheckRouter } from "./routes/healthCheck.js"
 const app = express()
+
+router.use(healthCheckRouter);
 
 // 1. Security Middlewares (Helmet)
 // add several criticals HTTP headers to protect aganist common attacks
