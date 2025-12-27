@@ -1,118 +1,144 @@
-import { handleApiError, handleApiSuccess, HookResponse } from "@/utils/api.utils";
+import {
+  handleApiError,
+  handleApiSuccess,
+} from "@/utils/api.utils";
 import { api } from "../api/axios";
 import { useAuthStore } from "../state/authStore";
-import {  IApiResponse } from "../types/api.type";
-import { AuthData, RefreshTokenData } from "../types/authApi.type";
+import { IApiResponse } from "../types/api.type";
+import { AuthData } from "../types/authApi.type";
 import { toast } from "sonner";
 
 export const useAuthApi = () => {
-  const { setUser, setAccessToken, clearAuth } = useAuthStore();
+  const { setUser, setAccessToken, clearAuth, setAuthenticating } =
+    useAuthStore();
 
-  const registerUser = async (
-    username: string | null,
-    email: string,
-    password: string
-  ) => {
-    useAuthStore.getState().setAuthenticating(true);
+  // 1. REGISTER - Triggers Verification Email
+  const registerUser = async (email: string, password: string) => {
+    setAuthenticating(true);
+    try {
+      const response = await api.post<IApiResponse<{ email: string }>>(
+        "/auth/register",
+        { email, password }
+      );
+      const result = handleApiSuccess(response);
+      toast.success(result.message || "Verification email sent!");
+      return result;
+    } catch (error) {
+      const { message, errMsgList } = handleApiError(error);
+      toast.error(errMsgList || message);
+      return handleApiError(error);
+    } finally {
+      setAuthenticating(false);
+    }
+  };
+
+  // 2. VERIFY EMAIL - Finalizes Registration
+  const verifyEmail = async (token: string) => {
+    setAuthenticating(true);
     try {
       const response = await api.post<IApiResponse<AuthData>>(
-        "/auth/register",
-        { username, email, password }
+        `/auth/verify-email/${token}`
+      );
+      const result = handleApiSuccess<AuthData>(response);
+
+      if (result.data) {
+        setUser(result.data.user);
+        setAccessToken(result.data.accessToken);
+        toast.success("Email verified successfully!");
+      }
+      return result;
+    } catch (error) {
+      const { message } = handleApiError(error);
+      toast.error(message);
+      return handleApiError(error);
+    } finally {
+      setAuthenticating(false);
+    }
+  };
+
+  // 3. LOGIN - Triggers OTP
+  const loginUser = async (email: string, password: string) => {
+    setAuthenticating(true);
+    try {
+      const response = await api.post<
+        IApiResponse<{ requiresOtp: boolean; email: string }>
+      >("/auth/login", { email, password });
+
+      const result = handleApiSuccess(response);
+      // We don't set user here yet, just return the instruction
+      if (result.data?.requiresOtp ) {
+        toast.success("Security code sent to your email");
+      }
+      return result;
+    } catch (error) {
+      const { message, errMsgList } = handleApiError(error);
+      toast.error(errMsgList || message);
+      return handleApiError(error);
+    } finally {
+      setAuthenticating(false);
+    }
+  };
+
+  // 4. VERIFY OTP - Finalizes Login
+  const verifyOtp = async (email: string, otp: string) => {
+    setAuthenticating(true);
+    try {
+      const response = await api.post<IApiResponse<AuthData>>(
+        "/auth/verify-otp",
+        {
+          email,
+          otp,
+        }
       );
 
       const result = handleApiSuccess<AuthData>(response);
       if (result.data) {
         setUser(result.data.user);
         setAccessToken(result.data.accessToken);
-        toast.success(result.message);
+        toast.success("Welcome back to EcoTrack!");
       }
       return result;
     } catch (error) {
-      console.log("Error in registerUser: ", handleApiError(error));
-      const { success, message, errMsgList } = handleApiError(error);
-      if (errMsgList && errMsgList !== "") {
-        console.log(`Error List:\n${errMsgList}`);
-        toast.error(errMsgList );
-      } else {
-        console.log(`Error Message: ${message}`);
-        toast.error(message)
-      }
+      const { message } = handleApiError(error);
+      toast.error(message);
+      return handleApiError(error);
     } finally {
-      useAuthStore.getState().setAuthenticating(false);
+      setAuthenticating(false);
     }
   };
 
-  const loginUser = async (
-    email: string,
-    password: string
-   ) => {
-    useAuthStore.getState().setAuthenticating(true);
-    try {
-      const response = await api.post<IApiResponse<AuthData>>("/auth/login", {
-        email,
-        password,
-      });
-
-      const result = handleApiSuccess<AuthData>(response);
-        if (result.data) {
-        setUser(result.data.user);
-        setAccessToken(result.data.accessToken);
-        toast.success(result.message);
-      }
-
-      return result;
-    } catch (error) {
-      const { success, message, errMsgList } = handleApiError(error);
-      if (errMsgList && errMsgList !== "") {
-        console.log(`Error List:\n${errMsgList}`);
-        toast.error(errMsgList);
-      } else {
-        toast.error(message);
-      }  
-    } finally {
-      useAuthStore.getState().setAuthenticating(false);
-    }
-  };
-
-  const logout = async (): Promise<HookResponse<null>> => {
+  const logout = async () => {
     try {
       const response = await api.post<IApiResponse<null>>("/auth/logout");
-      console.log("Logout response:", response);
-      clearAuth()
-      toast.success(response.data.message);
+      clearAuth();
+      toast.success(response.data.message || "Logged out");
       return handleApiSuccess<null>(response);
     } catch (error) {
-      const {message}= handleApiError(error);
-      toast.error(message);
-      return handleApiError(error)
-    } finally {
-      clearAuth();
+      clearAuth(); // Clear anyway for safety
+      return handleApiError(error);
     }
   };
 
-  
-  const rotateRefreshToken = async()=> {
+  const rotateRefreshToken = async () => {
     try {
-      const response = await api.post<IApiResponse<AuthData>>("/auth/refresh")
-      if(response.data) {
-        setUser(response.data.data.user)
-        setAccessToken(response.data.data.accessToken)
+      const response = await api.post<IApiResponse<AuthData>>("/auth/refresh");
+      if (response.data.success) {
+        setUser(response.data.data.user);
+        setAccessToken(response.data.data.accessToken);
       }
-      toast.success(response.data.message)
-      return handleApiSuccess<RefreshTokenData>(response)
+      return handleApiSuccess(response);
     } catch (error) {
-      setUser(null)
-      setAccessToken(null)
-      const {success,errMsgList,message} =  handleApiError(error)
-      if (errMsgList && errMsgList !== "" && errMsgList !== null) {
-        console.log(`Error List:\n${errMsgList}`);
-        toast.error(errMsgList);
-      }else if (message){
-        toast.error(message);
-      }
-    } 
+      clearAuth();
+      return handleApiError(error);
+    }
+  };
 
-  }
-
-  return { registerUser, loginUser, logout, rotateRefreshToken };
+  return {
+    registerUser,
+    verifyEmail,
+    loginUser,
+    verifyOtp,
+    logout,
+    rotateRefreshToken,
+  };
 };
