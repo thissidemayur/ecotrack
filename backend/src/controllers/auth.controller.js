@@ -4,40 +4,74 @@ import { jwtService } from "../services/jwt.service.js"
 import { ApiResponse } from "../utils/apiResponse.utils.js"
 
 /**
- * @description 
+ * @description Initiates registration. No tokens issued yet.
  */
-const registerUser = async(req,res)=>{
-    const {email,password} = req.body
-    const {user,accessToken,refreshToken} = await authService.registerUser({email,password,role:req.body.role, username:req.body.username})
+const registerUser = async (req, res) => {
+  const { email, password } = req.body;
+  
+  // Service sends verification email and stores data in Redis
+  const result = await authService.registerUser({ email, password });
 
-    // set refresh token in httpOnly cookie
-    res.cookie(
-        config.JWT.REFRESH_COOKIE_NAME,
-        refreshToken,
-        jwtService.getRefreshCookieOptions()
-    )
-    
-    return res.status(201).json(new ApiResponse(201,"User registered successfully",{
-        user,accessToken
-    }))
-}
+  return res.status(200).json(
+    new ApiResponse(200, result.message, { email: result.email })
+  );
+};
 
+/**
+ * @description Finalizes registration after email link is clicked.
+ */
+const verifyEmail = async (req, res) => {
+  const { token } = req.params; // or req.query depending on your link
+  const { user, accessToken, refreshToken } = await authService.verifyEmailToken(token);
 
-const loginUser = async(req,res)=>{
-    const {user,accessToken,refreshToken} = await authService.loginUser(req.body.email,req.body.password)
+  // Set refresh token in httpOnly cookie
+  res.cookie(
+    config.JWT.REFRESH_COOKIE_NAME,
+    refreshToken,
+    jwtService.getRefreshCookieOptions()
+  );
 
-    // set refresh token in httpOnly cookie
-    res.cookie(
-        config.JWT.REFRESH_COOKIE_NAME,
-        refreshToken,
-        jwtService.getRefreshCookieOptions()
-    )
+  return res.status(201).json(
+    new ApiResponse(201, "Email verified and account created!", { user, accessToken })
+  );
+};
 
-    return res.status(200).json(new ApiResponse(200,"User logged in successfully",{
-        user,accessToken
-    }))
-}
+/**
+ * @description Checks password and sends OTP. No tokens issued yet.
+ */
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  
+  // Service sends OTP and returns { requiresOtp: true }
+  const result = await authService.loginUser(email, password);
 
+  return res.status(200).json(
+    new ApiResponse(200, result.message, { 
+      requiresOtp: result.requiresOtp, 
+      email: result.email 
+    })
+  );
+};
+
+/**
+ * @description Finalizes login after OTP is verified. Tokens issued here.
+ */
+const verifyLoginOTP = async (req, res) => {
+  const { email, otp } = req.body;
+  
+  const { user, accessToken, refreshToken } = await authService.verifyOTP(email, otp);
+
+  // Set refresh token in httpOnly cookie
+  res.cookie(
+    config.JWT.REFRESH_COOKIE_NAME,
+    refreshToken,
+    jwtService.getRefreshCookieOptions()
+  );
+
+  return res.status(200).json(
+    new ApiResponse(200, "Login successful!", { user, accessToken })
+  );
+};
 
 /**
  * @description Handle rerfesh token rqst, rotate the token and issue new Access/Rerfresh Token
@@ -90,4 +124,11 @@ const logoutUser = async(req,res)=>{
 }
 
 
-export { refreshTokens, logoutUser, registerUser, loginUser };
+export {
+  refreshTokens,
+  logoutUser,
+  registerUser,
+  loginUser,
+  verifyEmail,
+  verifyLoginOTP,
+};

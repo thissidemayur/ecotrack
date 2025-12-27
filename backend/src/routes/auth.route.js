@@ -1,20 +1,34 @@
-import {Router} from "express"
-import { authRateLimiter } from "../middlewares/rateLimiter.middleware.js"
-import { validate } from "../middlewares/validation.middleware.js"
-import { userLoginSchema, userRegisterSchema } from "../validators/auth.validator.js"
-import { asyncHandler } from "../utils/asyncHandler.utils.js"
-import { loginUser, logoutUser, refreshTokens, registerUser } from "../controllers/auth.controller.js"
-import { noCache } from "../middlewares/security.middleware.js"
+import { Router } from "express";
+import { authRateLimiter } from "../middlewares/rateLimiter.middleware.js";
+import { validate } from "../middlewares/validation.middleware.js";
+import {
+  userLoginSchema,
+  userRegisterSchema,
+  verifyOTPSchema,
+  verifyEmailSchema,
+} from "../validators/auth.validator.js";
+import { asyncHandler } from "../utils/asyncHandler.utils.js";
+import {
+  loginUser,
+  logoutUser,
+  refreshTokens,
+  registerUser,
+  verifyEmail,
+  verifyLoginOTP,
+} from "../controllers/auth.controller.js";
+import { noCache } from "../middlewares/security.middleware.js";
 
-const authRouter = Router()
-// Apply noCache to ALL auth routes
-authRouter.use(noCache)
+const authRouter = Router();
 
+authRouter.use(noCache);
+
+// Register & Login
 authRouter.post(
-    "/register",
-    authRateLimiter,
-    validate(userRegisterSchema),
-    asyncHandler(registerUser))
+  "/register",
+  authRateLimiter,
+  validate(userRegisterSchema),
+  asyncHandler(registerUser)
+);
 
 authRouter.post(
   "/login",
@@ -23,9 +37,27 @@ authRouter.post(
   asyncHandler(loginUser)
 );
 
+// --- New Validated Verification Routes ---
 
-authRouter.post("/refresh",asyncHandler(refreshTokens))
-authRouter.post("/logout",asyncHandler(logoutUser))
+// Verify OTP (Check body for email and otp)
+authRouter.post(
+  "/verify-otp",
+  authRateLimiter,
+  validate(verifyOTPSchema),
+  asyncHandler(verifyLoginOTP)
+);
 
 
-export {authRouter}
+// Session Management
+authRouter.post("/refresh", asyncHandler(refreshTokens));
+authRouter.post("/logout", asyncHandler(logoutUser));
+
+// Verify Email (Check params for :token)
+authRouter.post(
+  "/verify-email/:token",
+  validate(verifyEmailSchema), // middleware checks schemas.params automatically
+  asyncHandler(verifyEmail)
+);
+
+
+export { authRouter };
