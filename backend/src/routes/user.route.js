@@ -40,7 +40,7 @@ userRouter.post(
 );
 
 // POST: /api/v1/users/update-profile
-userRouter.post(
+userRouter.patch(
   "/update-profile",
   isAuth,
   hasRole([USER_ROLES.USER,USER_ROLES.ADMIN]),
