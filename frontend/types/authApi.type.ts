@@ -16,8 +16,8 @@ export interface IUser {
   // New Onboarding & Location Fields
   location?: IUserLocation;
   home_size_sqm?: number;
-  householdSize?: number;
-  onboardingComplete?: boolean;
+  household_members?: number;
+  hasOnboarded?: boolean;
 
   // Metadata
   createdAt: string;
