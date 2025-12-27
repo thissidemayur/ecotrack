@@ -47,5 +47,14 @@ export const config = {
     BCRYPT_SALT_ROUNDS: parseInt(process.env.BCRYPT_SALT_ROUNDS,10) || 100,
 
     // Redis
-    REDIS_URL:process.env.REDIS_URL
+    REDIS_URL:process.env.REDIS_URL,
+    APP_NAME: process.env.APP_NAME || "ECO TRACK",
+
+    // SMTP
+    SMTP:{
+        HOST:process.env.SMTP_HOST,
+        PORT:process.env.SMTP_PORT,
+        USER:process.env.SMTP_USER,
+        PASSWORD:process.env.SMTP_PASSWORD,
+    }
 }
