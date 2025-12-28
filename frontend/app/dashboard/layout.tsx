@@ -1,9 +1,22 @@
 // app/dashboard/layout.tsx
+"use client"
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/dashboard/sidebar";
 import { Header } from "@/components/dashboard/header";
+import { useEffect } from "react";
+import { useAuthStore } from "@/state/authStore";
+import { useRouter } from "next/navigation";
+import { AuthProvider } from "@/components/providers/auth-provider";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const {user} = useAuthStore()
+  const router = useRouter()
+  useEffect(()=>{
+    if(user&& user?.hasOnboarded === false) {
+      return router.push("/onboarding")
+    }
+  },[router,user])
+
   return (
     <SidebarProvider>
       {/* 1. Ensure the container is exactly screen width */}
@@ -16,7 +29,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           {/* 3. This is the only scroll area. We remove padding here to let the Wrapper handle it */}
           <main className="flex-1 overflow-y-auto overflow-x-hidden">
-            {children}
+                    <AuthProvider>{children}</AuthProvider> 
           </main>
         </div>
       </div>
