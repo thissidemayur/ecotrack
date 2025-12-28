@@ -64,7 +64,9 @@ export const useAuthApi = () => {
         IApiResponse<{ requiresOtp: boolean; email: string }>
       >("/auth/login", { email, password });
 
-      const result = handleApiSuccess(response);
+      const result = handleApiSuccess<{ requiresOtp: boolean; email: string }>(
+        response
+      );
       // We don't set user here yet, just return the instruction
       if (result.data?.requiresOtp ) {
         toast.success("Security code sent to your email");

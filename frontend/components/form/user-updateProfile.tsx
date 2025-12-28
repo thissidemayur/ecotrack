@@ -50,7 +50,7 @@ export function UpdateProfileForm({ onSuccess }: { onSuccess?: () => void }) {
     watch,
     formState: { errors },
   } = useForm<UpdateProfileInput>({
-    resolver: zodResolver(updateProfileSchema),
+    resolver: zodResolver(updateProfileSchema) as any,
     defaultValues: {
       name: user?.name || "",
       username: user?.username || "",
