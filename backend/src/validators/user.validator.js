@@ -16,7 +16,6 @@ export const updateProfileSchema = z
       .toLowerCase()
       .optional(),
 
-
     name: z.string().max(100, "Name cannot exceed 100 characters").optional(),
 
     // 1. NESTED LOCATION FIELD
@@ -49,6 +48,7 @@ export const updateProfileSchema = z
 
     // Legacy field (if you still want to allow string regions)
     region: z.string().max(50).optional(),
+    hasOnboarded: z.boolean().optional(),
   })
   .strict()
   .partial();
