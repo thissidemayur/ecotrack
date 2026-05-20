@@ -4,13 +4,35 @@ import { useEffect, useState } from "react";
 import { DashboardWrapper } from "@/components/providers/DashboardProvider";
 import { GlobalSummaryGrid } from "@/components/dashboard/global-summary-grid";
 import { AdminLeaderboard } from "@/components/dashboard/admin-leaderboard";
-import { UserValidationTable } from "@/components/dashboard/user-validation-table";
 import { Activity, RefreshCcw, ShieldAlert, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { useAdminStore } from "@/state/adminStore";
+
+interface LeaderboardEntry {
+  userId: string;
+  name: string;
+  total_co2e: number;
+  rank: number;
+}
+
+// Transform backend data to LeaderboardEntry format
+const transformLeaderboardData = (
+  data: Array<{
+    userId: string;
+    co2e: number;
+    userInfo: { username: string | null; region: string };
+  }>
+): LeaderboardEntry[] => {
+  return data.map((item, index) => ({
+    userId: item.userId,
+    name: item.userInfo.username || "Anonymous",
+    total_co2e: item.co2e,
+    rank: index + 1,
+  }));
+};
 
 export default function AdminDashboard() {
   const { summary, isLoading } = useAdminStore();
@@ -88,8 +110,8 @@ export default function AdminDashboard() {
             </h2>
           </div>
           <AdminLeaderboard
-            highPerformers={summary.topPerformers}
-            lowPerformers={summary.bottomPerformers}
+            highPerformers={transformLeaderboardData(summary.topPerformers)}
+            lowPerformers={transformLeaderboardData(summary.bottomPerformers)}
           />
         </div>
 
