@@ -1,8 +1,9 @@
-# 🌍 Carbon Footprint Calculator for Households
+# 🌍 ecoTrack Backend - Carbon Footprint Calculation API
 
-**GitHub ID:** `@thissidemayur`
-**Project Link:** [https://github.com/thissidemayur/carbobFootprintCalculator](https://github.com/thissidemayur/carbobFootprintCalculator)
-**Live Link:** [Insert Live Deployment Link Here]
+**A robust Node.js + Express.js API for calculating and tracking household carbon footprints with real-time analytics and leaderboards.**
+
+**GitHub ID:** [@thissidemayur](https://github.com/thissidemayur)
+**Main Repository:** [ecoTrack](https://github.com/thissidemayur/ecoTrack)
 
 ## 1. Project Overview
 
@@ -36,31 +37,92 @@ This is a full-stack platform designed to empower households to measure, track, 
 
 ### Prerequisites
 
-* Node.js (v18+)
-* MongoDB Instance (Local or Atlas)
-* Redis Instance (Local or Cloud)
+* **Node.js** v18 or higher
+* **MongoDB** Instance (Local or Atlas)
+* **Redis** Instance (Local or Cloud)
+* **npm** or **yarn**
 
 ### Environment Configuration
 
-Create a `.env` file based on the template in the root directory and ensure all database and secret keys are set.
+Create a `.env` file in the backend root directory with the following variables:
 
-### Steps
+```env
+# Server
+PORT=3000
+NODE_ENV=development
 
-1.  **Clone the Repository**
-    ```bash
-    git clone [https://github.com/thissidemayur/carbobFootprintCalculator](https://github.com/thissidemayur/carbobFootprintCalculator)
-    cd carbobFootprintCalculator/server
-    ```
-2.  **Install Dependencies**
-    ```bash
-    npm install
-    ```
-3.  **Run the Server**
-    ```bash
-    npm start # Use your preferred script for development (e.g., npm run dev)
-    ```
+# Database
+MONGODB_URI=mongodb://localhost:27017/ecotrack
+MONGODB_DB_NAME=ecotrack
 
-## 6. project strucutre
+# Redis
+REDIS_URL=redis://localhost:6379
+
+# JWT Configuration
+JWT_SECRET=your_super_secret_jwt_key_change_in_production
+JWT_EXPIRY=7d
+
+# Admin
+ADMIN_EMAIL=admin@ecotrack.com
+ADMIN_PASSWORD=your_secure_admin_password
+
+# CORS
+FRONTEND_URL=http://localhost:3000
+
+# Email Service (Optional - if using Resend)
+RESEND_API_KEY=your_resend_api_key
+
+# File Upload
+MAX_FILE_SIZE=5242880
+```
+
+### Installation Steps
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/thissidemayur/ecoTrack.git
+   cd ecoTrack/backend
+   ```
+
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure Environment**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your database credentials and secrets
+   ```
+
+4. **Start the Server**
+   ```bash
+   # Development (with hot reload via nodemon)
+   npm run dev
+   
+   # Production
+   npm start
+   ```
+
+5. **Verify Server is Running**
+   ```bash
+   curl http://localhost:3000/health
+   ```
+
+## 5. Quick Commands
+
+```bash
+# Development server with auto-reload
+npm run dev
+
+# Production server
+npm start
+
+# Run tests
+npm test
+```
+
+## 6. Project Structure
 ```
 /server
 ├── /config
@@ -122,19 +184,80 @@ Create a `.env` file based on the template in the root directory and ensure all 
 └── .env                     # Environment variables (IGNORED BY GIT)
 ```
 
-## 6. Documentation and Design
+## 7. API Documentation
 
-To provide a comprehensive overview for evaluation, the following documentation files are included:
+### Authentication
+All authenticated endpoints require a Bearer token in the `Authorization` header:
+```
+Authorization: Bearer <your_jwt_token>
+```
 
-### [`API.md`](./API.md) 
-Details the complete contract for all REST endpoints, including request bodies, authentication requirements, query parameters, and example response payloads. This is essential for frontend integration and external testing (Postman).
+### Core Endpoints
 
-### [`ARCHITECTURE.md`](./ARCHITECTURE.md) 
-Explains the architectural decisions made: the **Service-Repository Pattern**, the role of the **Calculation Service**, the use of **Redis Sorted Sets** for leaderboards, and the **environmental logic** underpinning the $\text{CO}_2\text{e}$ calculations.
+#### Authentication
+- `POST /api/auth/register` - Create new user account
+- `POST /api/auth/login` - Login and receive JWT token
+- `POST /api/auth/refresh` - Refresh JWT token
+
+#### User Profile
+- `GET /api/users/profile` - Get current user profile
+- `PUT /api/users/profile` - Update user profile
+- `PUT /api/users/password` - Change password
+
+#### Carbon Footprint
+- `POST /api/footprint/calculate` - Calculate carbon footprint
+- `GET /api/footprint/history` - Get calculation history
+- `GET /api/footprint/summary` - Get summary and trends
+
+#### Admin Only
+- `GET /api/admin/analytics` - Get global analytics
+- `GET /api/admin/leaderboard` - Get top/bottom performers
+- `GET /api/factors` - Get all emission factors
+- `POST /api/factors` - Create emission factor
+- `PUT /api/factors/:id` - Update emission factor
+- `DELETE /api/factors/:id` - Delete emission factor
+
+**For complete API reference, see [API.md](./API.md)**
 
 ---
 
-### 7. Environmental Logic & Calculation Foundation
+## 8. Architecture & Design Documentation
+
+To provide a comprehensive overview, the following documentation files are included:
+
+### [`API.md`](./API.md)
+Details the complete contract for all REST endpoints, including:
+- Request/response schemas
+- Authentication requirements
+- Query parameters
+- Example payloads
+- Error responses
+
+**Use this for:** Frontend integration, Postman testing, API contract validation
+
+### [`ARCHITECTURE.md`](./ARCHITECTURE.md)
+Explains architectural decisions and design patterns:
+- **Service-Repository Pattern** for clean code separation
+- **Calculation Service** - Core CO₂e calculation engine
+- **Redis Sorted Sets** for real-time leaderboards
+- **Environmental logic** and emission factor calculations
+- **Data persistence strategy**
+
+**Use this for:** Understanding system design, contributing to architecture, code reviews
+
+### [`deploy.md`](./deploy.md)
+Production deployment instructions:
+- Environment setup
+- Database migrations
+- Docker containerization
+- CI/CD integration
+- Monitoring and logging
+
+**Use this for:** Deploying to production, infrastructure setup
+
+---
+
+## 9. Environmental Logic & Calculation Foundation
 
 The carbon footprint calculation is based on the GFA (Greenhouse Gas Footprint Assessment) standard:
 
