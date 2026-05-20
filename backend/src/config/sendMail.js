@@ -1,21 +1,22 @@
-import { createTransport } from "nodemailer";
+import { Resend } from "resend";
 import { config } from "./index.js";
 
-const sendMail = async ({ email, subject, html }) => {
-  const transport = createTransport({
-    host: config.SMTP.HOST,
-    port: config.SMTP.PORT,
-    auth: {
-      user: config.SMTP.USER,
-      pass: config.SMTP.PASSWORD,
-    },
-  });
+const resend = new Resend(config.RESEND_API_KEY);
 
-  await transport.sendMail({
-    from: config.SMTP.USER,
-    subject,
-    html,
-    to: email,
-  });
+const sendMail = async ({ email, subject, html }) => {
+  try {
+    const response = await resend.emails.send({
+      from: config.EMAIL_FROM, 
+      to: email,
+      subject,
+      html,
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Resend Email Error:", error);
+    throw error;
+  }
 };
+
 export { sendMail };
