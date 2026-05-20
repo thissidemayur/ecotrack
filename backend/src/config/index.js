@@ -6,11 +6,13 @@ dotenv.config()
 const requiredConfig = [
   "PORT",
   "MONGO_URI",
-  "ACCESS_SECRET",
-  "REFRESH_SECRET",
-  "CLIENT_URL", //reuired for CORS and secure cookie setup
-  "NODE_ENV",
-  "REDIS_URL",
+                "ACCESS_SECRET",
+                "REFRESH_SECRET",
+                "CLIENT_URL", //reuired for CORS and secure cookie setup
+                "NODE_ENV",
+                "REDIS_URL",
+                "RESEND_API_KEY",
+                "EMAIL_FROM"
 ]
 
 requiredConfig.forEach(key =>{
@@ -22,39 +24,35 @@ requiredConfig.forEach(key =>{
 
 // export configuration as config
 export const config = {
-    NODE_ENV: process.env.NODE_ENV,
-    PORT:process.env.PORT,
-    CLIENT_URL:process.env.CLIENT_URL,
-    HOST:process.env.HOST || "0.0.0.0",
-    // DB
-    MONGO_URI:process.env.MONGO_URI,
+  NODE_ENV: process.env.NODE_ENV,
+  PORT: process.env.PORT,
+  CLIENT_URL: process.env.CLIENT_URL,
+  HOST: process.env.HOST || "0.0.0.0",
+  // DB
+  MONGO_URI: process.env.MONGO_URI,
 
-    // JWT Security
-    JWT:{
-        ACCESS_SECRET:process.env.ACCESS_SECRET,
-        REFRESH_SECRET:process.env.REFRESH_SECRET,
-        ACCESS_EXPIRY:"15m",
-        REFRESH_EXPIRY:"7d",
-        // cookie name for refresh
-        REFRESH_COOKIE_NAME:"refreshToken"
-    },
+  // JWT Security
+  JWT: {
+    ACCESS_SECRET: process.env.ACCESS_SECRET,
+    REFRESH_SECRET: process.env.REFRESH_SECRET,
+    ACCESS_EXPIRY: "15m",
+    REFRESH_EXPIRY: "7d",
+    // cookie name for refresh
+    REFRESH_COOKIE_NAME: "refreshToken",
+  },
 
-    // Rate Limiting
-    RATE_LIMIT_MAX:parseInt(process.env.RATE_LIMIT_MAX,10) || 100 , //max rqst per window
-    RATE_LIMIT_WINDOW_MS:parseInt(process.env.RATE_LIMIT_WINDOW_MS,10) || 15*60*1000 , //15 minutes
+  // Rate Limiting
+  RATE_LIMIT_MAX: parseInt(process.env.RATE_LIMIT_MAX, 10) || 100, //max rqst per window
+  RATE_LIMIT_WINDOW_MS:
+    parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000, //15 minutes
 
-    // Security
-    BCRYPT_SALT_ROUNDS: parseInt(process.env.BCRYPT_SALT_ROUNDS,10) || 100,
+  // Security
+  BCRYPT_SALT_ROUNDS: parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 100,
 
-    // Redis
-    REDIS_URL:process.env.REDIS_URL,
-    APP_NAME: process.env.APP_NAME || "ECO TRACK",
+  // Redis
+  REDIS_URL: process.env.REDIS_URL,
+  APP_NAME: process.env.APP_NAME || "ECO TRACK",
 
-    // SMTP
-    SMTP:{
-        HOST:process.env.SMTP_HOST,
-        PORT:process.env.SMTP_PORT,
-        USER:process.env.SMTP_USER,
-        PASSWORD:process.env.SMTP_PASSWORD,
-    }
-}
+  RESEND_API_KEY: process.env.RESEND_API_KEY,
+  EMAIL_FROM: process.env.EMAIL_FROM ||" EcoTrack <auth@thissidemayur.me>"
+};
