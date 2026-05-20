@@ -41,10 +41,8 @@ const verifyEmail = async (req, res) => {
  */
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-  
   // Service sends OTP and returns { requiresOtp: true }
   const result = await authService.loginUser(email, password);
-
   return res.status(200).json(
     new ApiResponse(200, result.message, { 
       requiresOtp: result.requiresOtp, 
