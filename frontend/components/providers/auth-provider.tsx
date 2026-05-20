@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     !isLoading &&
     isAuthenticated &&
     pathname.startsWith("/admin") &&
-    user?.role !== "ADMIN"
+    user?.role !== "admin"
   ) {
     return (
       <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 text-center">
