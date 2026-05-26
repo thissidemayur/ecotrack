@@ -41,7 +41,7 @@ const healthCheckRouter = Router();
  * @description Shallow health check for AWS ALB.
  * Responds with 200 OK instantly to prove the Node.js process is alive.
  */
-healthCheckRouter.get("/health", (req, res) => {
+healthCheckRouter.get("/", (req, res) => {
   res.status(200).send("OK");
 });
 
