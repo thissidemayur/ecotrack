@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 import { IUser } from "../types/authApi.type"; // Importing the interface we defined earlier
 
 /**
@@ -23,9 +22,7 @@ interface AuthState {
   updateUser: (userData: IUser) => void;
 }
 
-export const useAuthStore = create<AuthState>(
-  persist(
-    (set) => ({
+export const useAuthStore = create<AuthState>((set) => ({
   // Initial State
   user: null,
   accessToken: null,
@@ -62,17 +59,5 @@ export const useAuthStore = create<AuthState>(
       isAuthenticating: false,
       isLoading: false,
     }),
-    }),
-    {
-      name: "auth-store",
-      storage: createJSONStorage(() => localStorage),
-      // Only persist auth data that should survive page reloads
-      partialize: (state) => ({
-        user: state.user,
-        accessToken: state.accessToken,
-        isAuthenticated: state.isAuthenticated,
-      }),
-    }
-  )
-);
+}));
 
