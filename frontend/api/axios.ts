@@ -69,7 +69,8 @@ api.interceptors.response.use(
     console.log(
       `[Interceptor] Request to: ${url} | Status: ${status} | isAuth: ${isAuthPath}`
     );
-    // Check 401, ensure not a refresh call, and not already retried
+    // Check 401, ensure not an auth call, and not already retried
+    // Don't try to refresh if it's an auth endpoint (login, register, etc)
     if (
       status === 401 &&
       !isAuthPath &&
@@ -88,8 +89,16 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         console.error("Token refresh failed: ", refreshError);
+        // Don't clear auth on refresh failure for auth routes
+        if (!isAuthPath) {
+          useAuthStore.getState().clearAuth();
+        }
         return Promise.reject(refreshError);
       }
+    }
+    // Only clear auth on non-auth 401 errors
+    if (status === 401 && !isAuthPath) {
+      useAuthStore.getState().clearAuth();
     }
     return Promise.reject(error);
   }

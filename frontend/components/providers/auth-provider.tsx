@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/state/authStore";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { isLoading, isAuthenticated, user } = useAuthStore();
+  const { isLoading, isAuthenticated, user, accessToken } = useAuthStore();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -15,14 +15,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     pathname === "/" ||
     pathname === "/login" ||
     pathname === "/register" ||
-    pathname.startsWith("/verify-email");
+    pathname.startsWith("/verify-email") ||
+    pathname.startsWith("/forgot-password");
 
   // 2. Handle Authentication Redirect
+  // Only redirect if not loading AND (not authenticated OR no access token) AND trying to access protected route
   useEffect(() => {
-    if (!isLoading && !isAuthenticated && !isPublicPath) {
+    // Skip redirect logic while loading or if we have an access token
+    if (isLoading) return;
+
+    // If user is NOT authenticated and trying to access protected route, redirect to login
+    if (!isAuthenticated && !accessToken && !isPublicPath) {
       router.push("/login");
     }
-  }, [isLoading, isAuthenticated, isPublicPath, router]);
+  }, [isLoading, isAuthenticated, accessToken, isPublicPath, router]);
 
   // 3. FULL-PAGE UNAUTHORIZED VIEW
   // If user is logged in but trying to access admin without admin role

@@ -181,47 +181,7 @@ export function AboutContent() {
         </div>
       </section>
 
-      {/* 4. TEAM SECTION */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-16 space-y-4">
-          <Badge className="bg-zinc-800 text-zinc-400 border-zinc-700">
-            Engineering Team
-          </Badge>
-          <h2 className="text-4xl md:text-6xl font-black text-white italic tracking-tighter">
-            The Architects
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {teamMembers.map((member, index) => (
-            <div
-              key={index}
-              className="group relative bg-zinc-900/40 border border-zinc-800 rounded-[2rem] p-6 text-center hover:border-emerald-500/50 transition-all duration-500"
-            >
-              <div className="relative w-32 h-32 mx-auto mb-6 rounded-3xl overflow-hidden bg-zinc-800 grayscale group-hover:grayscale-0 transition-all duration-500">
-                <Image
-                  fill
-                  src={"" }
-                  alt={member.name}
-                  className="object-cover"
-                />
-              </div>
-              <h3 className="text-lg font-bold text-white mb-1 group-hover:text-emerald-500 transition-colors">
-                {member.name}
-              </h3>
-              <p className="text-xs text-zinc-500 mb-4">{member.role}</p>
-              <div
-                className={cn(
-                  "text-[10px] font-mono uppercase tracking-widest pt-4 border-t border-zinc-800",
-                  member.color
-                )}
-              >
-                {member.tech}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+   
 
       {/* 5. CTA */}
       <section className="py-24 px-6">
