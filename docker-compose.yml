@@ -1,17 +1,42 @@
 services:
-  ecotrack-api:
-    build: 
-      context: ./backend
+
+  frontend:
+    build:
+      context: ./frontend
       dockerfile: Dockerfile
-    
+
+    container_name: ecotrack-frontend
+
     ports:
       - "3000:3000"
-    
+
+    env_file:
+      - ./frontend/.env
+
+    depends_on:
+      - backend
+
+    restart: unless-stopped
+
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
+    container_name: ecotrack-backend
+
+    ports:
+      - "5000:3000"
+
     env_file:
       - ./backend/.env
+
+    restart: unless-stopped
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
       timeout: 10s
+      start_period: 10s
       retries: 3
