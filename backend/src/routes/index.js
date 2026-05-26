@@ -4,11 +4,12 @@ import { userRouter } from "./user.route.js";
 import { footprintRouter } from "./footprint.routes.js";
 import { factorRouter } from "./emmisionFactor.route.js";
 import { adminRouter } from "./admin.route.js";
+import {healthCheckRouter} from "./healthCheck.js";
 const router = Router();
 
 // --- Public / Auth Routes ---
 router.use("/auth", authRouter);
-
+router.use("/health", healthCheckRouter);
 router.use("/users", userRouter);
 
 // --- Core Application Routes (User Footprint) ---
