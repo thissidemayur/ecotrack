@@ -10,6 +10,9 @@ import { securityHeaders } from "./middlewares/security.middleware.js"
 // imports for middlewares and routes
 import { healthCheckRouter } from "./routes/healthCheck.js"
 import router from "./routes/index.js"
+import { metricMiddleware } from "./middlewares/metrics.middleware.js"
+import { metricsRouter } from "./routes/metrics.route.js";
+
 
 const app = express()
 
@@ -30,6 +33,8 @@ app.use(express.urlencoded({extended:true, limit:"16kb"})) // parse URL-encoded 
 app.use(cookieParser()) // parse cookies from incoming request headers
 
 app.use(globalRateLimiter)
+app.use(metricMiddleware)
+app.use("/metrics", metricsRouter);
 
 app.use("/api/v1",router)
 app.use(healthCheckRouter);
