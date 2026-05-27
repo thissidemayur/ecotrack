@@ -24,6 +24,12 @@ services:
     env_file:
       - ./backend/.env
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
 
 
   prometheus:
@@ -51,12 +57,7 @@ services:
       - "9100:9100"
     restart: unless-stopped
 
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v1/health"]
-      interval: 30s
-      timeout: 10s
-      start_period: 10s
-      retries: 3
+
 
 volumes:
   grafana_data:
