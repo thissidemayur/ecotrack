@@ -61,11 +61,12 @@ class JWTService {
        const sevenDaysInMs = 7*24*60*60*1000;
 
        return {
-         httpOnly:true, //prevent client side XSS attacks
-         secure : config.NODE_ENV==="production", // send cookie only over https in production
-         sameSite:"Lax", // prevent CSRF attacks on GET/HEAD requests,
+         httpOnly: true, //prevent client side XSS attacks
+         secure: config.NODE_ENV === "production", // send cookie only over https in production
+          sameSite:
+            config.NODE_ENV === "production" ? "None" : "Lax", // allow refresh token cookies in cross-site requests only in production
          maxAge: sevenDaysInMs,
-         path:"/" // cookie only sent to this path
+         path: "/", // cookie only sent to this path
        }
    }
 
@@ -76,10 +77,11 @@ class JWTService {
     */
    getClearCookieOptions() {
     return {
-        httpOnly:true,
-        secure : config.NODE_ENV==="production",
-        sameSite:"Lax", 
-        path:"/"
+        httpOnly: true,
+        secure: config.NODE_ENV === "production",
+          sameSite:
+            config.NODE_ENV === "production" ? "None" : "Lax",
+        path: "/",
     }
    }
 
