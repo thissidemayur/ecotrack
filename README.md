@@ -64,6 +64,8 @@ Administrators can:
 | **UI Components** | Radix UI, TailwindCSS | Accessible, responsive design |
 | **Charts** | Recharts | Data visualization |
 | **Containerization** | Docker, Docker Compose | Easy deployment and environment consistency |
+| **Observability** | Prometheus, Grafana, Node Exporter | Metrics collection and monitoring |
+| **CI / DevOps** | Jenkins | Build automation and deployment orchestration |
 
 ---
 
@@ -278,8 +280,19 @@ docker-compose logs -f
 
 For production deployment instructions, see [backend/deploy.md](./backend/deploy.md).
 
+This repository also includes DevOps and monitoring tooling for a full production-ready deployment:
+- **Prometheus** for metrics scraping
+- **Grafana** for dashboards and visualizations
+- **Node Exporter** for host-level monitoring
+- **Jenkins** for CI/CD and build automation
+
+The `docker-compose.yml` includes local orchestration for the app plus monitoring services. A Terraform configuration is provided in `terraform/` to provision AWS infrastructure:
+- EC2 instance running the application stack
+- Security Group with rules for SSH, HTTP/HTTPS, frontend, backend, Jenkins, Prometheus, Grafana, and Node Exporter
+- AWS region and credentials configured via `terraform/variables.tf` and `terraform/terraform.tfvars`
+
 **Supported Platforms:**
-- AWS (ECS, EC2, Lambda)
+- AWS (EC2 + Terraform provisioning)
 - Vercel (Frontend)
 - Heroku
 - DigitalOcean
